@@ -40,7 +40,7 @@ async function getCollection() {
 
 app.get("/api/documents", async (req, res) => {
   try {
-    const collection = await getCollection();
+    const collection = await connectToDatabase();
     let query = { ...req.query };
 
     if (query._id) {
@@ -57,6 +57,26 @@ app.get("/api/documents", async (req, res) => {
     res.json(documents);
   } catch (error) {
     console.error("Error fetching documents:", error);
+    res
+      .status(500)
+      .json({ error: "Internal server error", details: error.message });
+  }
+});
+
+app.post("/api/documents", async (req, res) => {
+  try {
+    const collection = await connectToDatabase();
+    const document = req.body; // Get the document to insert from the request body
+
+    // Insert the document into the collection
+    const insertResult = await collection.insertOne(document);
+
+    res.status(201).json({
+      message: "Document inserted successfully!",
+      insertedId: insertResult.insertedId,
+    });
+  } catch (error) {
+    console.error("Error inserting document:", error);
     res.status(500).json({ error: "Internal server error" });
   }
 });
