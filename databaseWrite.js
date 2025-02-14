@@ -18,7 +18,7 @@ async function connectToDatabase() {
   try {
     await client.connect();
     console.log("Connected to MongoDB!");
-    return client.db("sampleDatabase").collection("testDatabaseWrite");
+    return client.db("sampleDatabase").collection("finalData");
   } catch (error) {
     console.error("Error connecting to MongoDB:", error);
     throw error;
@@ -31,36 +31,36 @@ async function insertDocument(collection, document) {
     console.log("Document inserted successfully!", insertResult.insertedId);
   } catch (error) {
     console.error("Error inserting document:", error);
-  } 
+  }
 }
 
-function mapColumnsNames(document){
+function mapColumnsNames(document) {
   var res = {};
 
   const nameMapping = {
-    "Write your first and last name or leave it blank if you'd like to stay anonymous!": "senderName",
+    "Write your first and last name or leave it blank if you'd like to stay anonymous!":
+      "senderName",
     "Who are we sending this gift to? (Recipient’s name)": "receiverName",
     "Recipient’s email address": "receiverEmail",
     "Would you like to add a message? (optional)": "note",
     "Choose an option for your card!": "cardNumber",
-    "Would you like to add roses and a chocolate gift package for $5?": "giftPackage"
-  } 
+    "Would you like to add roses and a chocolate gift package for $5?":
+      "giftPackage",
+  };
 
-  const cardOptionMapping = { 
-    "Option 1": "4", 
+  const cardOptionMapping = {
+    "Option 1": "4",
     "Option 2": "3",
     "Option 3": "2",
     "Option 4": "1",
-  }
+  };
 
   for (const key in document) {
     if (key in nameMapping) {
-      
-      if (key === "Choose an option for your card!"){
+      if (key === "Choose an option for your card!") {
         const convertedOption = cardOptionMapping[document[key]];
         res[nameMapping[key]] = convertedOption;
-      }
-      else res[nameMapping[key]] = document[key];
+      } else res[nameMapping[key]] = document[key];
     } else res[key] = document[key];
   }
 
@@ -76,18 +76,18 @@ const main = async () => {
   const results = await new Promise((resolve, reject) => {
     const data = [];
 
-    fs.createReadStream("./data/form_test.csv")
+    fs.createReadStream("./data/final_data.csv")
       .pipe(csv())
       .on("data", (row) => data.push(row))
       .on("end", () => resolve(data))
       .on("error", (err) => reject(err));
   });
-  
-  for (const row of results){
+
+  for (const row of results) {
     await insertDocument(collection, row);
   }
 
   await client.close();
-}
+};
 
 main();
