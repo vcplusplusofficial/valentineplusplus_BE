@@ -62,7 +62,7 @@ async function sendEmail(transporter, document, template, receiver) {
       }); // sender
   // 3. Send Email with Rendered HTML
   const mailOptions = {
-    from: "VC++ <${process.env.EMAIL_USER}>",
+    from: `VC++ <${process.env.EMAIL_USER}>`,
     to: receiver ? receiverEmail : senderEmail,
     subject: receiver
       ? "[Valentine's++] A Heartfelt Surprise Awaits You! 🌟💌"
