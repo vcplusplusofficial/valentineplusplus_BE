@@ -18,7 +18,7 @@ async function connectToDatabase() {
   try {
     await client.connect();
     console.log("Connected to MongoDB!");
-    return client.db("sampleDatabase").collection("finalData");
+    return client.db("sampleDatabase").collection("testing");
   } catch (error) {
     console.error("Error connecting to MongoDB:", error);
     throw error;
@@ -76,7 +76,7 @@ const main = async () => {
   const results = await new Promise((resolve, reject) => {
     const data = [];
 
-    fs.createReadStream("./data/final_data.csv")
+    fs.createReadStream("./data/testing.csv")
       .pipe(csv())
       .on("data", (row) => data.push(row))
       .on("end", () => resolve(data))
