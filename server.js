@@ -7,7 +7,7 @@ require("dotenv").config();
 const app = express();
 app.use(
   cors({
-    origin: "https://valentinefe-9yfv5.ondigitalocean.app/",
+    origin: "https://valentinefe-9yfv5.ondigitalocean.app",
   })
 );
 app.use(express.json());
