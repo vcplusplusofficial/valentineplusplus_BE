@@ -76,7 +76,7 @@ const main = async () => {
   const results = await new Promise((resolve, reject) => {
     const data = [];
 
-    fs.createReadStream("./data/testing.csv")
+    fs.createReadStream("./data/sample.csv")
       .pipe(csv())
       .on("data", (row) => data.push(row))
       .on("end", () => resolve(data))
