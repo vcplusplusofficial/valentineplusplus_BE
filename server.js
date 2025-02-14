@@ -29,7 +29,7 @@ async function connectToDatabase() {
     try {
       await client.connect();
       console.log("Connected to MongoDB!");
-      collection = client.db("sampleDatabase").collection("testing");
+      collection = client.db("sampleDatabase").collection("sampleCollection");
     } catch (error) {
       console.error("Error connecting to MongoDB:", error);
       throw error;
