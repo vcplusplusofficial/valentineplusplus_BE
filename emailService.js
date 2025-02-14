@@ -74,7 +74,7 @@ async function sendEmail(transporter, document, template, receiver) {
     "Email sent: " + info.response,
     "_id:",
     redirectLink,
-    "reciever:",
+    "receiver:",
     receiver
   );
 }
