@@ -54,6 +54,7 @@ app.get("/api/documents", async (req, res) => {
 
     console.log("Querying documents with:", query);
     const documents = await collection.find(query).toArray();
+    console.log("Found documents:", documents);
     res.json(documents);
   } catch (error) {
     console.error("Error fetching documents:", error);
