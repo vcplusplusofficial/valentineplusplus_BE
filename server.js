@@ -24,7 +24,7 @@ const client = new MongoClient(url, {
 
 let collection;
 
-async function getCollection() {
+async function connectToDatabase() {
   if (!collection) {
     try {
       await client.connect();
