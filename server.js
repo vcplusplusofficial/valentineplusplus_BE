@@ -7,7 +7,7 @@ require("dotenv").config();
 const app = express();
 app.use(
   cors({
-    origin: "http://localhost:5173", // Replace with your React app's URL
+    origin: "https://valentinefe-9yfv5.ondigitalocean.app",
   })
 );
 app.use(express.json());
@@ -22,36 +22,45 @@ const client = new MongoClient(url, {
   },
 });
 
+let collection;
+
 async function connectToDatabase() {
-  try {
-    await client.connect();
-    console.log("Connected to MongoDB!");
-    return client.db("sampleDatabase").collection("sampleCollection");
-  } catch (error) {
-    console.error("Error connecting to MongoDB:", error);
-    throw error;
+  if (!collection) {
+    try {
+      await client.connect();
+      console.log("Connected to MongoDB!");
+      collection = client.db("sampleDatabase").collection("testDatabaseWrite");
+    } catch (error) {
+      console.error("Error connecting to MongoDB:", error);
+      throw error;
+    }
   }
+  return collection;
 }
 
 app.get("/api/documents", async (req, res) => {
   try {
     const collection = await connectToDatabase();
-    let query = { ...req.query }; // Clone query parameters
+    let query = { ...req.query };
 
-    // Convert `_id` to ObjectId if it exists in the query
     if (query._id) {
       try {
         query._id = new ObjectId(query._id);
       } catch (error) {
+        console.error("Invalid _id format:", error);
         return res.status(400).json({ error: "Invalid _id format" });
       }
     }
 
+    console.log("Querying documents with:", query);
     const documents = await collection.find(query).toArray();
+    console.log("Found documents:", documents);
     res.json(documents);
   } catch (error) {
     console.error("Error fetching documents:", error);
-    res.status(500).json({ error: "Internal server error" });
+    res
+      .status(500)
+      .json({ error: "Internal server error", details: error.message });
   }
 });
 
@@ -73,6 +82,11 @@ app.post("/api/documents", async (req, res) => {
   }
 });
 
-app.listen(3000, () => {
-  console.log("Server is running on port 3000");
+app.get("/api/hello", (req, res) => {
+  res.json({ message: "Hello from the backend!" });
+});
+
+const port = process.env.PORT || 3000;
+app.listen(port, "0.0.0.0", () => {
+  console.log(`Server is running on port ${port}`);
 });
