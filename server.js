@@ -7,7 +7,7 @@ require("dotenv").config();
 const app = express();
 app.use(
   cors({
-    origin: "http://localhost:5173", // Replace with your React app's URL
+    origin: "https://valentinefe-9yfv5.ondigitalocean.app/",
   })
 );
 app.use(express.json());
@@ -73,8 +73,8 @@ app.post("/api/documents", async (req, res) => {
   }
 });
 
-app.get("/", (req, res) => {
-  res.status(200).send("OK");
+app.get("/api/hello", (req, res) => {
+  res.json({ message: "Hello from the backend!" });
 });
 
 const port = process.env.PORT || 3000;
